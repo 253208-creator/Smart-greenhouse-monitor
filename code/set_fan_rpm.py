@@ -1,7 +1,7 @@
 from machine import Pin, PWM
 import time
 
-def set_fan_rpm(pin_num, rpm, freq=100, kickstart_time=0.3, _fans={}):
+def set_fan_rpm(pin_num, rpm, freq=100, kickstart_time=0.1, _fans={}):
     rpm = max(0.0, min(1.0, float(rpm)))
 
     if pin_num not in _fans:
