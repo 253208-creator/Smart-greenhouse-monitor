@@ -11,7 +11,7 @@ IoT greenhouse climate monitoring and control system using **Raspberry Pi Pico W
 - **Microcontroller:** Raspberry Pi Pico W (RP2040) with expansion shield;
 - **Environmental Sensor:** Bosch BME280 Digital Environmental Sensor (measures atmospheric pressure, relative humidity, and temperature via **I2C**);
 - **Display:** 128×64 **I2C OLED Display** (SH1106 controller, address `0x3C`);
-- **Ventilation Driver:** 5V DC brushless fan driven by an **NTE 199 NPN transistor** and a $1\text{ k}\Omega$ base resistor;
+- **Ventilation Driver:** 5V DC brushless fan driven by an **2N7000 transistor** and a $100\text{}\Omega$ base resistor;
 - **Status Indicator:** 4-pin common-cathode **RGB LED** module (green = ventilating, red = idle);
 - **User Input:** Incremental Digital Rotary Encoder (`CLK`, `DT`).
 
@@ -52,7 +52,7 @@ IoT greenhouse climate monitoring and control system using **Raspberry Pi Pico W
 | **BME280** | `VIN` / `GND` / `SCL` / `SDA` | `3V3` / `GND` / `GP5` / `GP4` | `I2C0` (400 kHz) | Environmental sensor (`0x76`) |
 | **I2C OLED (SH1106)** | `VCC` / `GND` / `SCK` / `SDA` | `3V3` / `GND` / `GP5` / `GP4` | `I2C0` (400 kHz) | Shared I2C0 bus (`0x3C`) |
 | **Rotary Encoder** | `+` / `GND` / `CLK` / `DT` | `3V3` / `GND` / `GP17` / `GP18` | Digital Input (`PULL_UP`) | Hardware `IRQ` for `Tset` adjustment |
-| **5V Fan Driver** | Base (via $1\text{ k}\Omega$ resistor) | `GP19` | `PWM` (200 Hz) | Collector to Fan `-`, Emitter to `GND`, Fan `+` to `5V / VBUS` |
+| **5V Fan Driver** | Gate (via $100\text{}\Omega$ resistor) | `GP19` | `PWM` (200 Hz) | Drain to Fan `-`, Source to `GND`, Fan `+` to `5V / VBUS` |
 | **RGB LED** | `-` / `R` / `G` / `B` | `GND` / `GP14` / `GP13` / `GP12` | Digital Output | Green (`GP13`) when ventilating, Red (`GP14`) when idle |
 
 ### Fan & NPN Transistor (`2N7000`) Wiring
@@ -109,5 +109,5 @@ Individual hardware verification tests performed prior to system integration (lo
 | **I2C Bus & BME280** | Executed `i2c.scan()` and continuous `sensor.read_values()` output | Confirmed `0x76` (BME280) and `0x3C` (OLED) addresses and stable T/H/P readings |
 | **I2C OLED (SH1106)** | Rendered test strings via `framebuf` with column offset `0x02` | Clean 128×64 text rendering without horizontal pixel shift |
 | **Rotary Encoder** | Rotated clockwise/counter-clockwise with `IRQ` callback active | Accurate $\pm 1\text{ }^\circ\text{C}$ updates to `Tset` without missed steps |
-| **5V Fan + NTE 199** | Tested `set_fan_rpm()` at `0%`, `35%` (with `300 ms` kickstart), and `100%` | Reliable startup at low PWM duty cycles and full stop at `0%` |
+| **5V Fan + 2N7000** | Tested `set_fan_rpm()` at `0%`, `35%` (with `300 ms` kickstart), and `100%` | Reliable startup at low PWM duty cycles and full stop at `0%` |
 | **RGB LED** | Toggled ventilation active flag (`True` / `False`) | Green LED illuminated when ventilating (`True`); Red LED when idle (`False`) |
