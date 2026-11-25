@@ -35,8 +35,8 @@ IoT greenhouse climate monitoring and control system using **Raspberry Pi Pico W
                                               PWM (GP19)   |               | GPIO (GP12, 13, 14)
                                                            v               v
                                                  +----------------+ +--------------+
-                                                 | NPN Transistor | |   RGB LED    |
-                                                 |   (NTE 199)    | | (Green/Red)  |
+                                                 |   Transistor   | |   RGB LED    |
+                                                 |    (2N7000)    | | (Green/Red)  |
                                                  +-------+--------+ +--------------+
                                                          |
                                                          v
@@ -55,13 +55,13 @@ IoT greenhouse climate monitoring and control system using **Raspberry Pi Pico W
 | **5V Fan Driver** | Base (via $1\text{ k}\Omega$ resistor) | `GP19` | `PWM` (200 Hz) | Collector to Fan `-`, Emitter to `GND`, Fan `+` to `5V / VBUS` |
 | **RGB LED** | `-` / `R` / `G` / `B` | `GND` / `GP14` / `GP13` / `GP12` | Digital Output | Green (`GP13`) when ventilating, Red (`GP14`) when idle |
 
-### Fan & NPN Transistor (`NTE 199`) Wiring
+### Fan & NPN Transistor (`2N7000`) Wiring
 ```text
-5V (VBUS) --------> [+] 5V DC Fan [-] --------> Collector (C) [NTE 199]
+5V (VBUS) --------> [+] 5V DC Fan [-] --------> Drain (D)    [2N7000]
                                                                |
-GP19 (PWM) -------> [ 1 kΩ Resistor ] --------> Base (B)      [NTE 199]
-                                                               |
-GND <------------------------------------------ Emitter (E)   [NTE 199]
+GP19 (PWM) -------> [ 100 Ω Resistor ] --------> Gate (G)    [2N7000]  -----> [ 10k Ω Resistor ]----|
+                                                               |                                    |
+GND <------------------------------------------ Source (S)   [2N7000]  -----------------------------|
 ```
 
 ## Core Functionality & Timing
